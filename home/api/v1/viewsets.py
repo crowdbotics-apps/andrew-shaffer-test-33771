@@ -51,7 +51,7 @@ class PlanViewSet(ModelViewSet):
     queryset = Plan.objects.all().order_by('price')
     serializer_class = PlanSerializer
     permission_classes = [permissions.IsAuthenticated]
-    http_method_names = ['get', 'post']
+    http_method_names = ['get']
 
 class SubscriptionViewSet(ModelViewSet):
     queryset = Subscription.objects.all()
