@@ -44,11 +44,14 @@ class AppViewSet(ModelViewSet):
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
 
+    # def get_queryset(self):
+    #     return App.objects.filter(user=self.request.user)
+
 class PlanViewSet(ModelViewSet):
     queryset = Plan.objects.all().order_by('price')
     serializer_class = PlanSerializer
     permission_classes = [permissions.IsAuthenticated]
-    http_method_names = ['get']
+    http_method_names = ['get', 'post']
 
 class SubscriptionViewSet(ModelViewSet):
     queryset = Subscription.objects.all()

@@ -24,7 +24,7 @@ class App(models.Model):
         (REACT, 'React Native')
     )
     
-    framework = models.CharField(max_length=6, choices=FRAMEWORK_CHOICES)
+    framework = models.CharField(max_length=12, choices=FRAMEWORK_CHOICES)
 
     domain_name = models.CharField(max_length=50, blank=True)
     screenshot = models.URLField(blank=True)
