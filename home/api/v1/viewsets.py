@@ -2,10 +2,16 @@ from rest_framework.authtoken.serializers import AuthTokenSerializer
 from rest_framework.viewsets import ModelViewSet, ViewSet
 from rest_framework.authtoken.models import Token
 from rest_framework.response import Response
+from rest_framework import permissions
+from home.models import App, Plan, Subscription
+from .permissions import IsOwnerOrReadOnly
 
 from home.api.v1.serializers import (
     SignupSerializer,
     UserSerializer,
+    AppSerializer,
+    PlanSerializer,
+    SubscriptionSerializer
 )
 
 
@@ -28,3 +34,27 @@ class LoginViewSet(ViewSet):
         token, created = Token.objects.get_or_create(user=user)
         user_serializer = UserSerializer(user)
         return Response({"token": token.key, "user": user_serializer.data})
+
+
+class AppViewSet(ModelViewSet):
+    queryset = App.objects.all()
+    serializer_class = AppSerializer
+    permission_classes = [permissions.IsAuthenticated,IsOwnerOrReadOnly]
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
+
+class PlanViewSet(ModelViewSet):
+    queryset = Plan.objects.all().order_by('price')
+    serializer_class = PlanSerializer
+    permission_classes = [permissions.IsAuthenticated]
+    http_method_names = ['get']
+
+class SubscriptionViewSet(ModelViewSet):
+    queryset = Subscription.objects.all()
+    serializer_class = SubscriptionSerializer
+    permission_classes = [permissions.IsAuthenticated,IsOwnerOrReadOnly]
+    http_method_names = ['get', 'post', 'put', 'patch']
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)

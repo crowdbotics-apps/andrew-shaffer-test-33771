@@ -1,6 +1,25 @@
-from django.urls import path
+from django.urls import path, re_path
+from drf_yasg import openapi
+from drf_yasg.views import get_schema_view
+from rest_framework import permissions
+
 from .views import home
+
+
+schema_view = get_schema_view(
+   openapi.Info(
+      title="Scenario Test API",
+      default_version='v1',
+      description="Andrew Shaffer's attempt at a simple service",
+      terms_of_service="https://www.google.com/policies/terms/",
+      contact=openapi.Contact(email="andrew.jason.shaffer@gmail.com"),
+      license=openapi.License(name="BSD License"),
+   ),
+   public=True,
+   permission_classes=[permissions.AllowAny],
+)
 
 urlpatterns = [
     path("", home, name="home"),
+    re_path(r'^api-docs/$', schema_view.with_ui('swagger', cache_timeout=0), name='swagger-apidoc'),
 ]
